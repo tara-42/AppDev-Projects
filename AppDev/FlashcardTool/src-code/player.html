@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>a simple music player</title>		
+<style>
+	body{
+  		font: sans-serif，Verdana, Helvetica;
+  		font-size: 12pt;
+		}
+    
+    /* our main music library */
+	#queue {
+		border-radius: 10px;
+		padding: 5px 5px 3px 5px;
+		width: 200px;
+		margin-left: 1px;
+		margin-top: 10px;
+		height: 150px;
+		overflow: auto;
+	}
+    	/* #btn {
+		border-radius: 10px;
+		width: 100px;
+		margin-left: 1px;
+		margin-top:  5px;
+		height: 25px;
+		overflow: auto;
+		background: #e4e2dd;
+		font-weight: bold;
+		color: black;
+	}  */
+
+    /*queue a mini version that is inside of our bigger queue,*/
+    #queue a {
+		display: block;
+		cursor: pointer;
+		padding: 2.5px 5px;
+		border-radius: 5px;
+		overflow: hidden;
+		margin-bottom: 2.5px;
+	}
+	#queue a.file { background: #d3cacd;}
+
+	#queue { background: #e7dce6; }
+	#queue a { background: #c2b8c0; }
+    #queue a:hover { background: #d8d7d0;}
+	#queue a.playing { background: #e9dce3; font-weight: bold; color: rgb(5, 5, 5);}
+    
+</style>
+
+<!-- //this helps us build our graphic -->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+
+var root = "/music/";
+var path = [];
+
+function init() {
+	load(path);
+	$('#player').bind('ended', next);
+	//$('#btn').click(next); 
+}
+
+function load(path)  {
+	var url = root+path.join('/');
+	$.ajax({
+			url: url,
+			dataType: "json",
+			success: function(data) {
+				listFile(data)
+			}
+		});
+}
+function listFile(files) {
+	var $b = $('#queue').empty();
+	function addToList(i, f) {
+		if (f.Name[0] == '.' || f.Name[0] == ':') return;
+    	var dir = f.IsDir;
+		if(dir) return;
+		f.Path = path.join('/');
+		$('<a></a>').text(f.Name).data('file', f)
+			.addClass("file")
+			.appendTo($b)
+			.click(clickFile);
+	}
+	$.each(files, addToList);
+}
+
+function clickFile(e) {
+	var f = $(e.target).data('file');
+	var name = f.Name;
+	var path = f.Path;
+	var url = root+path+'/'+name;
+	$('#queue a').removeClass('playing');
+	$(e.target).addClass('playing')
+	$('#player').attr('src', url);
+	$('#player').play();
+}
+function next() {
+	var $next = $('#queue a.playing').next();
+	if ($next.length) $next.click();
+}
+
+google.load("jquery", "1.3.1");
+google.setOnLoadCallback(init);
+</script>
+	</head>
+	<body>
+		<audio id="player" controls autoplay autobuffer >
+		<p>What? Your browser doesn't support</p>
+		</audio>
+		<div id="queue"></div>
+	</body>
+</html>
+
+<!-- <BUTTON id="btn" title="play next song">NEXT</BUTTON> -->
+<!-- -->
