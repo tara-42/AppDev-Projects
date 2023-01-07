@@ -1,0 +1,28 @@
+.button{
+    font-size: 1.5em;
+    border: none;
+    height: 70px;
+    width: 200px;
+    display: block;
+    border-radius: 16px;
+    border: 1px;
+    text-align: center;
+    text-decoration: none;
+    color: #ecf0f8;
+    background: #34495e;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.button:hover {
+  background-color: #a5b4d3;
+  color: black;
+}
+
+.button:active{
+    border: none;
+    position: relative;
+    box-shadow: 0px 3px #b4c4e3;
+    background: #ecf0f8; 
+    border-radius: 16px;
+}
